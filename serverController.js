@@ -93,7 +93,7 @@ exports.stopServer = function(fromId){
 
  // CHECK RUNNING PROCESSES
 
-exports.checkRunningProcesses = function(fromId){
+exports.checkRunningProcesses = function(fromId) {
 		if (process.env.NODE_ENV == 'production') {
 			cmd = 'ps -r -eo command,%cpu,%mem';
 		}
@@ -109,7 +109,6 @@ exports.checkRunningProcesses = function(fromId){
 			});
 
 	}
-}
 
 /*
  // check running processes  (systeminfo | findstr Physical) & (systeminfo | findstr Boot)
