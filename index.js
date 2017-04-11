@@ -77,7 +77,7 @@ bot.onText(/^\/process/, message => {
   const fromId = message.from.id;
   const srcUrl = message.text.split(' ').slice(1).join(' ');
   //pass the url to function
-     checkRunningProcesses(fromId,url);
+     checkRunningProcesses(fromId,srcUrl);
 });
 
 
