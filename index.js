@@ -127,7 +127,7 @@ function checkRunningProcesses(fromId,url){
           bot.sendMessage(fromId,result);
     }
       let command = 'ps -e command';
-       process.exec(cmdoutput,function (err,stdout,stderr){
+       process.exec(command,function (err,stdout,stderr){
         if (err) {
               bot.sendMessage(fromId,"\n"+response.stderr);
           } else {
