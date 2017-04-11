@@ -98,13 +98,15 @@ exports.checkRunningProcesses = function(fromId) {
 			cmd = 'ps -r -eo command,%cpu,%mem';
 		}
 		else {
-			cmd = 'ps -eo command,%cpu,%mem';
+			cmd = 'ps -a command,%cpu,%mem';
 		}
 		exec(cmd, function(err, stdout, stderr) {
 			    if (err) {
 			        bot.sendMessage(fromId,"\n"+stderr);
 			    } else {
-			        bot.sendMessage(fromId,"Running Processes - " + stdout);
+			    	console.log(stdout);
+			    	var output = stdout.split('\n').slice(0, 6).join('\n');
+			        bot.sendMessage(fromId,"Running Processes - " + output);
 			    }
 			});
 
