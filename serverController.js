@@ -3,6 +3,11 @@ os =require('os'),
 request = require('request'),
 express = require('express'),
 exec = require('child_process').exec;
+TelegramBot = require('node-telegram-bot-api');
+const bot = new TelegramBot('261219001:AAEtz7spMMNwQQ_AcbCBtKXHAN01gCFVQSI', {
+   polling:false 
+});
+
 
 // CHECK SERVER HEALTH STATUS CONTINUOUSLY TILL USER SESSION CONTINUOUSLY
  exports.checkServerStatus = function (fromId,url){
