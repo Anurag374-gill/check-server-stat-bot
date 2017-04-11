@@ -1,204 +1,96 @@
 const express = require('express'),
 bodyParser = require('body-parser'),
-pidusage = require("pidusage"),
-os =require('os');
-//Firebase = require('firebase'),
-//usersRef = new Firebase('https://firstproject-5ee62.firebaseio.com/Users/');
-/*twilio = require('twilio'),
-client = twilio('ACf0d4bb9691bd0aaec2712128dd4e8635', 'AC236f8fe2eff6d382d67267fcb043586c:76f974593dd373a33ae7e8a1359caa6e'),
-cron = require('node-cron');*/
-
-const request = require('request');
-const requireAll = require('require-all');
-const validUrl = require('valid-url');
-/*const PersistentMemoryStorage = require('./PersistentMemoryStorage'),
-    storage = new PersistentMemoryStorage(
-        `${__dirname}/data/userStorage.json`,
-        `${__dirname}/data/chatStorage.json`
-    );*/
-const TelegramBot = require('node-telegram-bot-api');
+controller = require('./serverController.js'),
+request = require('request'),
+requireAll = require('require-all'),
+validUrl = require('valid-url'),
+TelegramBot = require('node-telegram-bot-api');
 const bot = new TelegramBot('261219001:AAEtz7spMMNwQQ_AcbCBtKXHAN01gCFVQSI', {
-   polling:true, 
+   polling:false, 
 });
 
+// Start Server 
 const app = express();
 
 bot.setWebHook('https://t.me/GetServerNotificationBot');
 
-///Cron job to send text to user every 6 hours
-/*var job = setTimeout(function(){
-  checkServerStatus(userStoragePath.data,chatStoragePath.data);
-},3000);*/
-  
-// Take user input
-bot.onText(/^\/url/, message => {
-  const fromId = message.from.id;
-  const srcUrl = message.text.split(' ').slice(1).join(' ');
-  if(validUrl.isUri(srcUrl)) {
-     //pass the url to function
-     checkServerStatus(fromId,srcUrl);
-     }
-   else
-   {
-    bot.sendMessage(fromId,"Invalid url -: "+srcUrl);
-   }
-});
 
-// Introdution to the bot
+//----------------------------------------------------Commands for Telegram Bot------------------------------------------------------//
+
+
+// 1.  User types /start to get the introdution to the bot
+
 bot.onText(/^\/start/, message => {
     const fromId = message.from.id;
-    const response = `Hi, I can show you server health status. Enter the command /url followed by a valid url`;
-    bot.sendMessage(fromId, response);
+    const response = `<i>`+`Hi there, I can show you server health status. Enter the command /url followed by a valid url.`+`<i>`;
+    bot.sendMessage(fromId, { parse_mode: 'Markdown' }, response);
   });
 
-//Function to show server status to the user on entering /url
 
-//1.Take the url from the user
-//2.Check whether the url is valid
-//3. Check the status of the url entered
+
+
+//2. User types /url www.abc.com to find its health stats continuously
+
 bot.onText(/^\/url/, message => {
   const fromId = message.from.id;
   const srcUrl = message.text.split(' ').slice(1).join(' ');
-  if(validUrl.isUri(srcUrl)) {
-     bot.sendMessage(fromId,'Okay lets see the status');
-     //pass the url to function
-     checkServerStatus(fromId,srcUrl);
+  if(validUrl.isUri(srcUrl)) { // Check url is valid or not
+     controller.checkServerStatus(fromId,srcUrl);
      }
-   else
+  else
    {
-    bot.sendMessage(fromId,"Invalid url -: "+srcUrl);
+    bot.sendMessage(fromId,{ parse_mode: 'Markdown' }, "Invalid url : "+'<b>' + srcUrl + '</b>');
    }
 });
 
 
-bot.onText(/^\/getTime/, message => {
+
+//3. User types /status www.abc.com to find its health stats only once
+
+bot.onText(/^\/status/, message => {
   const fromId = message.from.id;
   const srcUrl = message.text.split(' ').slice(1).join(' ');
   if(validUrl.isUri(srcUrl)) {
-     //pass the url to function
-     checkServer(fromId,srcUrl);
+     controller.checkServerStatusOnce(fromId,srcUrl);
      }
-   else
+  else
    {
-    bot.sendMessage(fromId,"Invalid url -: "+srcUrl);
+     bot.sendMessage(fromId,{ parse_mode: 'Markdown' }, "Invalid url : "+'<b>' + srcUrl + '</b>');
    }
 });
 
 
 
 
-//bot text to take process running command
+//4. User types /process to get processes running on his server
 bot.onText(/^\/process/, message => {
   const fromId = message.from.id;
   const srcUrl = message.text.split(' ').slice(1).join(' ');
   //pass the url to function
-     checkRunningProcesses(fromId,srcUrl);
+     controller.checkRunningProcesses(fromId,srcUrl);
 });
 
 
-// Run command from user to server
+
+//5. User types /cmd [command] to execute in the server directly
 bot.onText(/^\/cmd/, message => {
   const fromId = message.from.id;
   const cmdC = message.text.split(' ').slice(1).join(' ');
   //pass the url to function
-     userCmd(fromId);
+     controller.userCmd(fromId);
 });
 
-// Check server stats
-
-function checkServerStatus(fromId,url){
-      request(url, function(socket,response,err){
-        if(err){
-          let result = "Server Error"
-          bot.sendMessage(fromId,result);
-        }
-        if(socket){
-          var start = process.hrtime();
-          var usageInStart = process.cpuUsage();
-        }
-        if(response){
-          let responsetime = process.hrtime(start);
-          let responsecode = response.statusCode;
-          let responsemsg = response.statusMessage;
-          let cpu_usage = process.cpuUsage(usageInStart);
-          let totalUser = ~~(cpu_usage.user)* 0.001;
-          let totalSystem = ~~(cpu_usage.system)* 0.001;
-          bot.sendMessage(fromId,
-            "Execution time:" + responsetime[0]/1000000 + "s " + responsetime[1]/1000000+"ms" + "\nStatus:" + responsecode +
-
-             "\nResponse:" + responsemsg + "\nTotal User:" + totalUser + "\nTotalSystem:" + totalSystem);
-        }
-      });
-
-
-}
-
-// check server down time
-function checkServer (fromId,url){
-   request(url,function(socket,response){
-    if(socket){
-      var start = process.hrtime();
-    }
-    if(response){
-      let responsetime = process.hrtime(start);
-      let uptime = responsetime[1]/1000000;
-      if(uptime > 5){
-        bot.sendMessage(fromId,'Server is slow/down');
-      }
-      bot.sendMessage(fromId,(checkServerStatus(fromId,url)));
-    }
-   });
- }
 
 
 
-// check running processes  (systeminfo | findstr Physical) & (systeminfo | findstr Boot)
-function checkRunningProcesses(fromId,url){
-  const process= require('child_process');
-  request(url,function(err,response){
-    if(err){
-      let result = "Server Error"
-          bot.sendMessage(fromId,result);
-    }
-      
-      if(response){
-        let command = 'ps -e command';
-       process.exec(command,function (err,stdout,stderr){
-        if (err) {
-              bot.sendMessage(fromId,"\n"+stderr);
-          } else {
-              bot.sendMessage(fromId,"Running Processes - :" + stdout);
-          }
 
-       });
-     }
-     });
-}
 
-// commands From user on server
-function userCmd(fromId){
 
-  if(!cmdC)
-      return bot.sendMessage(fromId,'Not a valid command');
-      var process = require('child_process');
-      process.exec(cmdC,function (err,stdout,stderr) {
-          if (err) {
-              bot.sendMessage(fromId,"\n"+stderr);
-          } else {
-              bot.sendMessage(fromId,stdout + "\n\n Job done !");
-          }
-      });
-}
+
+
+
 
 
 app.use(bodyParser.json());
 app.get(`/`, (req, res) => res.redirect('https://t.me/GetServerNotificationBot'));
 app.listen(process.env.PORT || 3434); 
-
-/*function exitHandler(exitCode) {
-    storage.flush();
-    process.exit(exitCode);
-}
-
-process.on('SIGINT', exitHandler.bind(null, 0));
-process.on('uncaughtException', exitHandler.bind(null, 1));*/
