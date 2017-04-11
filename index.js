@@ -6,7 +6,7 @@ requireAll = require('require-all'),
 validUrl = require('valid-url'),
 TelegramBot = require('node-telegram-bot-api');
 const bot = new TelegramBot('261219001:AAEtz7spMMNwQQ_AcbCBtKXHAN01gCFVQSI', {
-   polling:false, 
+   polling:false 
 });
 
 // Start Server 
