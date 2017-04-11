@@ -12,35 +12,87 @@ const bot = new TelegramBot('261219001:AAEtz7spMMNwQQ_AcbCBtKXHAN01gCFVQSI', {
 // CHECK SERVER HEALTH STATUS CONTINUOUSLY TILL USER SESSION CONTINUOUSLY
  exports.checkServerStatus = function (fromId,url){
       request(url, function(socket,response,err){
-      	let timer = setTimeout(function(){
+      	var date = '';
+      	var connection = false;
         if(err){
-          let result = "Server Error"
+          if(err.code == 408 || err.code == 404 || err.code == 400 || err.code == 403)	
+          {
+          	let result = "Server Error. Please try again."
           bot.sendMessage(fromId,result);
-        }
-    	},5000);
-        clearTimeout(timer);
+      }
+    	}
         if(socket){
-          var start = exec.hrtime();
-          var usageInStart = exec.cpuUsage();
+        	setTimeout(function(){
+        	 bot.sendMessage(fromId,'Cannot connect to the server');
+        },5000);
+          var start = process.hrtime();
+          var usageInStart = process.cpuUsage();
+        }
+        if(response){
+        intervalId = setInterval(function(){
+          let response_code = response.statusCode;
+          let response_time = process.hrtime(start);
+          let response_msg = response.statusMessage;
+          date = Date(Date.now()).toString();
+          connection = true;
+
+          //let cpu_usage = process.cpuUsage(usageInStart);
+          //let totalUserTime = ~~(cpu_usage.user)/1000;
+          //let totalSystemTime = ~~(cpu_usage.system)/1000;
+          //let idleTime = ~~(cpu_usage.idle)/1000;
+          //let load = process.loadavg()[0];
+          bot.sendMessage(fromId,
+            "Response time: " + response_time[0]/1000000 + " s, " + response_time[1]/1000000+"ms" + "\nStatus: " + response_code +
+             "\nResponse: " + response_msg + "\nDate: " + date + 
+             "\nAlive: " + connection);
+          },5000);
+        }
+      });
+    }
+
+
+// To stop the server
+
+exports.stopServer = function(fromId){
+      clearInterval(intervalId);
+      bot.sendMessage(fromId,'Monitoring stopped');
+}
+
+// CHECK SERVER STATUS ONLY ONCE
+// CHECK SERVER HEALTH STATUS CONTINUOUSLY TILL USER SESSION CONTINUOUSLY
+ exports.checkServerStatusOnce = function (fromId,url){
+      request(url, function(socket,response,err){
+      	var date = '';
+      	var connection = false;
+        if(err){
+          if(err.code == 408 || err.code == 404 || err.code == 400 || err.code == 403)	
+          {
+          	let result = "Server Error. Please try again."
+          bot.sendMessage(fromId,result);
+      }
+    	}
+        if(socket){
+        	setTimeout(function(){
+        	 bot.sendMessage(fromId,'Cannot connect to the server');
+        },5000);
+          var start = process.hrtime();
+          var usageInStart = process.cpuUsage();
         }
         if(response){
           let response_code = response.statusCode;
-          let response_time = exec.hrtime(start);
+          let response_time = process.hrtime(start);
           let response_msg = response.statusMessage;
-          let cpu_usage = exec.cpuUsage(usageInStart);
-          let totalUserTime = ~~(cpu_usage.user)/1000;
-          let totalSystemTime = ~~(cpu_usage.system)/1000;
-          let idleTime = ~~(cpu_usage.idle)/1000;
-          let speed = os.cpus().speed;
+          date = Date(Date.now()).toString();
+          connection = true;
           bot.sendMessage(fromId,
-            "Execution time: " + response_time[0]/1000000 + " s, " + response_time[1]/1000000+"ms" + "\nStatus: " + response_code +
-             "\nSpeed: " + speed + "MHz" + "\nResponse: " + response_msg + "\nUser Process Time: " + totalUserTime + " ms"+
-             "\nCPU Idle Time: " + idleTime + " ms"+ "\nSystem Process Time: " + totalSystemTime + " ms.");
+            "Response time: " + response_time[0]/1000000 + " s, " + response_time[1]/1000000+"ms" + "\nStatus: " + response_code +
+             "\nResponse: " + response_msg + "\nDate: " + date + 
+             "\nAlive: " + connection);
         }
       });
+    }
 
-
-}
+ 
 
 /*
  // check running processes  (systeminfo | findstr Physical) & (systeminfo | findstr Boot)

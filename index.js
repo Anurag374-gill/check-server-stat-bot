@@ -6,7 +6,7 @@ requireAll = require('require-all'),
 validUrl = require('valid-url'),
 TelegramBot = require('node-telegram-bot-api');
 const bot = new TelegramBot('261219001:AAEtz7spMMNwQQ_AcbCBtKXHAN01gCFVQSI', {
-   polling:false 
+   polling:true 
 });
 
 // Start Server 
@@ -29,7 +29,7 @@ bot.onText(/^\/start/, message => {
 
 
 
-//2. User types /url www.abc.com to find its health stats continuously
+//2. User types /url www.abc.com to find its health stats continuously DONE!
 
 bot.onText(/^\/url/, message => {
   const fromId = message.from.id;
@@ -39,13 +39,13 @@ bot.onText(/^\/url/, message => {
      }
   else
    {
-    bot.sendMessage(fromId,{ parse_mode: 'Markdown' }, "Invalid url : "+'<b>' + srcUrl + '</b>');
+    bot.sendMessage(fromId,"Invalid url : "+'<b>' + srcUrl + '</b>',{ parse_mode: 'HTML' });
    }
 });
 
 
 
-//3. User types /status www.abc.com to find its health stats only once
+//3. User types /status www.abc.com to find its health stats only once DONE!
 
 bot.onText(/^\/status/, message => {
   const fromId = message.from.id;
@@ -78,6 +78,12 @@ bot.onText(/^\/cmd/, message => {
   const cmdC = message.text.split(' ').slice(1).join(' ');
   //pass the url to function
      controller.userCmd(fromId);
+});
+
+//6. User type /stop to stop receiving server status DONE!
+bot.onText(/^\/stop/, message => {
+  const fromId = message.from.id;
+  controller.stopServer(fromId);
 });
 
 
