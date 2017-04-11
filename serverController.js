@@ -42,7 +42,7 @@ const bot = new TelegramBot('261219001:AAEtz7spMMNwQQ_AcbCBtKXHAN01gCFVQSI', {
           //let idleTime = ~~(cpu_usage.idle)/1000;
           //let load = process.loadavg()[0];
           bot.sendMessage(fromId,
-            "Response time: " + ~~((response_time[0]/1000000)-2) + " s, " + ~~(response_time[1]/1000000) +"ms" + "\nStatus: " + response_code +
+            "Response time: " + ~~((response_time[0]/1000000)-1) + " s, " + ~~(response_time[1]/1000000) +"ms" + "\nStatus: " + response_code +
              "\nResponse: " + response_msg + "\nDate: " + date + 
              "\nAlive: " + connection);
           },5000);
@@ -84,7 +84,7 @@ exports.stopServer = function(fromId){
           date = Date(Date.now()).toString();
           connection = true;
           bot.sendMessage(fromId,
-            "Response time: " + response_time[0]/1000000 + " s, " + response_time[1]/1000000+"ms" + "\nStatus: " + response_code +
+            "Response time: " + ~~((response_time[0]/1000000)-1) + " s, " + response_time[1]/1000000+"ms" + "\nStatus: " + response_code +
              "\nResponse: " + response_msg + "\nDate: " + date + 
              "\nAlive: " + connection);
         }
@@ -94,19 +94,13 @@ exports.stopServer = function(fromId){
  // CHECK RUNNING PROCESSES
 
 exports.checkRunningProcesses = function(fromId) {
-		if (process.env.NODE_ENV == 'production') {
-			cmd = 'ps -r -eo command,%cpu,%mem';
-		}
-		else {
 			cmd = 'ps -a command,%cpu,%mem';
-		}
 		exec(cmd, function(err, stdout, stderr) {
 			    if (err) {
 			        bot.sendMessage(fromId,"\n"+stderr);
 			    } else {
 			    	console.log(stdout);
-			    	var output = stdout.split('\n').slice(0, 6).join('\n');
-			        bot.sendMessage(fromId,"Running Processes - " + output);
+			        bot.sendMessage(fromId,"Running Processes - " + stdout);
 			    }
 			});
 
