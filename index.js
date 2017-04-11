@@ -126,15 +126,18 @@ function checkRunningProcesses(fromId,url){
       let result = "Server Error"
           bot.sendMessage(fromId,result);
     }
-      let command = 'ps -e command';
+      
+      if(response){
+        let command = 'ps -e command';
        process.exec(command,function (err,stdout,stderr){
         if (err) {
-              bot.sendMessage(fromId,"\n"+response.stderr);
+              bot.sendMessage(fromId,"\n"+stderr);
           } else {
-              bot.sendMessage(fromId,"Running Processes - :" + response.stdout);
+              bot.sendMessage(fromId,"Running Processes - :" + stdout);
           }
 
        });
+     }
      });
 }
 
