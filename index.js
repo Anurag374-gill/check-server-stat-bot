@@ -77,7 +77,7 @@ bot.onText(/^\/process/, message => {
   const fromId = message.from.id;
   const srcUrl = message.text.split(' ').slice(1).join(' ');
   //pass the url to function
-     checkRunningProcesses(fromId);
+     checkRunningProcesses(fromId,url);
 });
 
 
@@ -119,7 +119,7 @@ function checkServerStatus(fromId,url){
 }
 
 // check running processes  (systeminfo | findstr Physical) & (systeminfo | findstr Boot)
-function checkRunningProcesses(fromId){
+function checkRunningProcesses(fromId,url){
   const process= require('child_process');
   request(url,function(err,response){
     if(err){
@@ -131,7 +131,7 @@ function checkRunningProcesses(fromId){
         if (err) {
               bot.sendMessage(fromId,"\n"+response.stderr);
           } else {
-              bot.sendMessage(fromId,"Running Processes - :" + stdout);
+              bot.sendMessage(fromId,"Running Processes - :" + response.stdout);
           }
 
        });
