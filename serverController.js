@@ -100,7 +100,7 @@ exports.checkRunningProcesses = function(fromId) {
 		else {
 			cmd = 'ps -eo command,%cpu,%mem';
 		}
-		exec(cmd, (err, stdout, stderr) {
+		exec(cmd, function(err, stdout, stderr) {
 			    if (err) {
 			        bot.sendMessage(fromId,"\n"+stderr);
 			    } else {
