@@ -155,7 +155,7 @@ function userCmd(fromId){
 
 
 app.use(bodyParser.json());
-app.get(`/`, (req, res) => res.redirect('https://pure-dusk-89490.herokuapp.com/'));
+app.get(`/`, (req, res) => res.redirect('https://t.me/GetServerNotificationBot'));
 app.listen(process.env.PORT || 3434); 
 
 /*function exitHandler(exitCode) {
