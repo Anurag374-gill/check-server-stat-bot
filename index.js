@@ -23,7 +23,7 @@ bot.setWebHook('https://t.me/GetServerNotificationBot');
 bot.onText(/^\/start/, message => {
     const fromId = message.from.id;
     const response = `<i>`+`Hi there, I can show you server health status. Enter the command /url followed by a valid url.`+`<i>`;
-    bot.sendMessage(fromId, { parse_mode: 'Markdown' }, response);
+    bot.sendMessage(fromId, response);
   });
 
 

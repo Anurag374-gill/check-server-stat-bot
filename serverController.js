@@ -5,7 +5,7 @@ express = require('express'),
 exec = require('child_process').exec;
 
 // CHECK SERVER HEALTH STATUS CONTINUOUSLY TILL USER SESSION CONTINUOUSLY
- function checkServerStatus(fromId,url){
+ exports.checkServerStatus = function (fromId,url){
       request(url, function(socket,response,err){
       	let timer = setTimeout(function(){
         if(err){
@@ -37,7 +37,6 @@ exec = require('child_process').exec;
 
 }
 
-module.exports = checkServerStatus;
 /*
  // check running processes  (systeminfo | findstr Physical) & (systeminfo | findstr Boot)
 export function checkRunningProcesses(fromId,url){
