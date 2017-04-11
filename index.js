@@ -149,7 +149,6 @@ function checkServer (fromId,url){
     }
    });
  }
-}
 
 
 
