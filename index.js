@@ -71,6 +71,21 @@ bot.onText(/^\/url/, message => {
 });
 
 
+bot.onText(/^\/getTime/, message => {
+  const fromId = message.from.id;
+  const srcUrl = message.text.split(' ').slice(1).join(' ');
+  if(validUrl.isUri(srcUrl)) {
+     //pass the url to function
+     checkServer(fromId,srcUrl);
+     }
+   else
+   {
+    bot.sendMessage(fromId,"Invalid url -: "+srcUrl);
+   }
+});
+
+
+
 
 //bot text to take process running command
 bot.onText(/^\/process/, message => {
@@ -117,6 +132,26 @@ function checkServerStatus(fromId,url){
 
 
 }
+
+// check server down time
+function checkServer (fromId,url){
+   request(url,function(socket,response){
+    if(socket){
+      let start = process.hrtime();
+    }
+    if(response){
+      let responsetime = process.hrtime(start);
+      let uptime = responsetime[1]/1000000;
+      if(uptime > 5){
+        bot.sendMessage(fromId,'Server is slow/down');
+      }
+      bot.sendMessage(fromId,(checkServerStatusk(fromId,url)));
+    }
+   });
+ }
+}
+
+
 
 // check running processes  (systeminfo | findstr Physical) & (systeminfo | findstr Boot)
 function checkRunningProcesses(fromId,url){
