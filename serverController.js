@@ -94,7 +94,13 @@ exports.stopServer = function(fromId){
  // CHECK RUNNING PROCESSES
 
 exports.checkRunningProcesses = function(fromId){
-	exec('ps -r -a',function (err,stdout,stderr) {
+		if (process.env.NODE_ENV == 'development') {
+			cmd = 'ps -r -eo command,%cpu,%mem';
+		}
+		else {
+			cmd = 'ps -eo command,%cpu,%mem';
+		}
+		exec(cmd, (err, stdout, stderr) {
 			    if (err) {
 			        bot.sendMessage(fromId,"\n"+stderr);
 			    } else {
