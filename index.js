@@ -26,9 +26,9 @@ const app = express();
 bot.setWebHook('https://t.me/GetServerNotificationBot');
 
 ///Cron job to send text to user every 6 hours
-var job = setTimeout(function(){
+/*var job = setTimeout(function(){
   checkServerStatus(userStoragePath.data,chatStoragePath.data);
-},3000);
+},3000);*/
   
 // Take user input
 bot.onText(/^\/url/, message => {
