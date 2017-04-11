@@ -94,7 +94,7 @@ exports.stopServer = function(fromId){
  // CHECK RUNNING PROCESSES
 
 exports.checkRunningProcesses = function(fromId) {
-			cmd = 'ps -a command,%cpu,%mem';
+			cmd = 'ps -e command,%cpu,%mem';
 		exec(cmd, function(err, stdout, stderr) {
 			    if (err) {
 			        bot.sendMessage(fromId,"\n"+stderr);
