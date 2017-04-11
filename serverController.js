@@ -108,7 +108,7 @@ exports.checkRunningProcesses = function(fromId){
 			    }
 			});
 
-
+	}
 }
 
 /*
