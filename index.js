@@ -19,7 +19,6 @@ const validUrl = require('valid-url');
 const TelegramBot = require('node-telegram-bot-api');
 const bot = new TelegramBot('261219001:AAEtz7spMMNwQQ_AcbCBtKXHAN01gCFVQSI', {
    polling:true, 
-   storage:storage
 });
 
 const app = express();
