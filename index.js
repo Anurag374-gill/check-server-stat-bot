@@ -74,14 +74,14 @@ bot.onText(/^\/url/, message => {
 bot.onText(/^\/getTime/, message => {
   const fromId = message.from.id;
   const srcUrl = message.text.split(' ').slice(1).join(' ');
-  /*if(validUrl.isUri(srcUrl)) {
-     //pass the url to function*/
+  if(validUrl.isUri(srcUrl)) {
+     //pass the url to function
      checkServer(fromId,srcUrl);
-     /*}
+     }
    else
    {
     bot.sendMessage(fromId,"Invalid url -: "+srcUrl);
-   }*/
+   }
 });
 
 
