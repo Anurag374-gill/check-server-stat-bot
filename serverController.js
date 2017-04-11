@@ -42,7 +42,7 @@ const bot = new TelegramBot('261219001:AAEtz7spMMNwQQ_AcbCBtKXHAN01gCFVQSI', {
           //let idleTime = ~~(cpu_usage.idle)/1000;
           //let load = process.loadavg()[0];
           bot.sendMessage(fromId,
-            "Response time: " + ((response_time[0]/1000000)-2) + " s, " + response_time[1]/1000000+"ms" + "\nStatus: " + response_code +
+            "Response time: " + ~~((response_time[0]/1000000)-2) + " s, " + ~~(response_time[1]/1000000) +"ms" + "\nStatus: " + response_code +
              "\nResponse: " + response_msg + "\nDate: " + date + 
              "\nAlive: " + connection);
           },5000);
@@ -59,7 +59,6 @@ exports.stopServer = function(fromId){
 }
 
 // CHECK SERVER STATUS ONLY ONCE
-// CHECK SERVER HEALTH STATUS CONTINUOUSLY TILL USER SESSION CONTINUOUSLY
  exports.checkServerStatusOnce = function (fromId,url){
       request(url, function(socket,response,err){
       	var date = '';
@@ -92,7 +91,19 @@ exports.stopServer = function(fromId){
       });
     }
 
- 
+ // CHECK RUNNING PROCESSES
+
+exports.checkRunningProcesses = function(fromId){
+	exec('ps -a',function (err,stdout,stderr) {
+			    if (err) {
+			        bot.sendMessage(fromId,"\n"+stderr);
+			    } else {
+			        bot.sendMessage(fromId,"Running Processes - " + stdout);
+			    }
+			});
+
+
+}
 
 /*
  // check running processes  (systeminfo | findstr Physical) & (systeminfo | findstr Boot)

@@ -65,9 +65,9 @@ bot.onText(/^\/status/, message => {
 //4. User types /process to get processes running on his server
 bot.onText(/^\/process/, message => {
   const fromId = message.from.id;
-  const srcUrl = message.text.split(' ').slice(1).join(' ');
+  //const srcUrl = message.text.split(' ').slice(1).join(' ');
   //pass the url to function
-     controller.checkRunningProcesses(fromId,srcUrl);
+     controller.checkRunningProcesses(fromId);
 });
 
 
