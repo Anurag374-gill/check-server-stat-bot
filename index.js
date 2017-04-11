@@ -145,7 +145,7 @@ function checkServer (fromId,url){
       if(uptime > 5){
         bot.sendMessage(fromId,'Server is slow/down');
       }
-      bot.sendMessage(fromId,(checkServerStatusk(fromId,url)));
+      bot.sendMessage(fromId,(checkServerStatus(fromId,url)));
     }
    });
  }
