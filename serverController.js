@@ -94,7 +94,7 @@ exports.stopServer = function(fromId){
  // CHECK RUNNING PROCESSES
 
 exports.checkRunningProcesses = function(fromId){
-		if (process.env.NODE_ENV == 'development') {
+		if (process.env.NODE_ENV == 'production') {
 			cmd = 'ps -r -eo command,%cpu,%mem';
 		}
 		else {
