@@ -42,7 +42,7 @@ const bot = new TelegramBot('261219001:AAEtz7spMMNwQQ_AcbCBtKXHAN01gCFVQSI', {
           //let idleTime = ~~(cpu_usage.idle)/1000;
           //let load = process.loadavg()[0];
           bot.sendMessage(fromId,
-            "Response time: " + response_time[0]/1000000 + " s, " + response_time[1]/1000000+"ms" + "\nStatus: " + response_code +
+            "Response time: " + ((response_time[0]/1000000)-2) + " s, " + response_time[1]/1000000+"ms" + "\nStatus: " + response_code +
              "\nResponse: " + response_msg + "\nDate: " + date + 
              "\nAlive: " + connection);
           },5000);
