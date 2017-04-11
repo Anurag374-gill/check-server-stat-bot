@@ -137,7 +137,7 @@ function checkServerStatus(fromId,url){
 function checkServer (fromId,url){
    request(url,function(socket,response){
     if(socket){
-      let start = process.hrtime();
+      var start = process.hrtime();
     }
     if(response){
       let responsetime = process.hrtime(start);
