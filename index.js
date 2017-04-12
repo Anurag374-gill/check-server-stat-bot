@@ -115,7 +115,7 @@ bot.onText(/^\/cmd/, message => {
   const fromId = message.from.id;
   const cmdC = message.text.split(' ').slice(1).join(' ');
   //pass the url to function
-  if(!cmdC)
+  if(cmdC)
      controller.userCmd(fromId,cmdC);
    else
     bot.sendMessage("Please enter a valid command");
