@@ -5,7 +5,7 @@ request = require('request'),
 requireAll = require('require-all'),
 validUrl = require('valid-url'),
 firebase  = require('firebase'),
-//admin = require("firebase-admin"),
+admin = require("firebase-admin"),
 TelegramBot = require('node-telegram-bot-api');
 const bot = new TelegramBot('261219001:AAEtz7spMMNwQQ_AcbCBtKXHAN01gCFVQSI', {
    polling:true 
@@ -14,6 +14,9 @@ const twilio = require('twilio'),
 client = twilio('ACf0d4bb9691bd0aaec2712128dd4e8635', 'AC236f8fe2eff6d382d67267fcb043586c:76f974593dd373a33ae7e8a1359caa6e'),
 cronJob = require('cron').CronJob;
 
+
+bot.setWebHook('https://t.me/GetServerNotificationBot');
+
 // Start Server 
 const app = express();
 
@@ -21,21 +24,22 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true
 }));
-app.get(`/`, (req, res) => res.redirect('https://t.me/GetServerNotificationBot'));
-app.listen(process.env.PORT || 3434); 
-
-bot.setWebHook('https://t.me/GetServerNotificationBot');
-
-// connect to the database
 
 var serviceAccount = require("./chatbot-61827-firebase-adminsdk.json");
 
-firebase.initializeApp({
-  serviceAccount: serviceAccount,
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
   databaseURL: "https://chatbot-61827.firebaseio.com/"
 });
 
-var ref = firebase.database().ref('/');
+
+
+
+
+// connect to the database
+
+
+var ref = admin.database().ref('/');
 var userRef = ref.child('/user');
 var urlRef =  ref.child('/url');
 var statusrRef =  ref.child('/status');
@@ -176,6 +180,10 @@ var job = new cronJob( '* * * * *', function(){
       console.log(err);
     });
   }, () => { console.log('Stop monitoring server...'); }, false);
+
+
+app.get(`/`, (req, res) => res.redirect('https://t.me/GetServerNotificationBot'));
+app.listen(process.env.PORT || 3434); 
 
 
 
