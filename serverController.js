@@ -120,64 +120,7 @@ exports.userCmd = function(fromId,cmdC){
 }
 
 /*
- // check running processes  (systeminfo | findstr Physical) & (systeminfo | findstr Boot)
-export function checkRunningProcesses(fromId,url){
-  const process= require('child_process');
-  request(url,function(err,response){
-    if(err){
-      let result = "Server Error"
-          bot.sendMessage(fromId,result);
-    }
-      
-      if(response){
-        let command = 'ps -e command,%cpu,%mem';
-       process.exec(command,function (err,stdout,stderr){
-        if (err) {
-              bot.sendMessage(fromId,"\n"+stderr);
-          } else {
-              bot.sendMessage(fromId,"Running Processes - :" + stdout);
-          }
-
-       });
-     }
-     });
-}
-
-
-// commands From user on server
-export function userCmd(fromId){
-
-  if(!cmdC)
-      return bot.sendMessage(fromId,'Not a valid command');
-      var process = require('child_process');
-      process.exec(cmdC,function (err,stdout,stderr) {
-          if (err) {
-              bot.sendMessage(fromId,"\n"+stderr);
-          } else {
-              bot.sendMessage(fromId,stdout + "\n\n Job done !");
-          }
-      });
-}
-
-
-
-
-// check server down time
-export function checkServer (fromId,url){
-   request(url,function(socket,response){
-    if(socket){
-      var start = process.hrtime();
-    }
-    if(response){
-      let responsetime = process.hrtime(start);
-      let uptime = responsetime[1]/1000000;
-      if(uptime > 5){
-        bot.sendMessage(fromId,'Server is slow/down');
-      }
-      bot.sendMessage(fromId,(checkServerStatus(fromId,url)));
-    }
-   });
- }
+ 
 
 
 
