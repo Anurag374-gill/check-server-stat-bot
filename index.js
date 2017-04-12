@@ -5,7 +5,6 @@ request = require('request'),
 requireAll = require('require-all'),
 validUrl = require('valid-url'),
 firebase  = require('firebase'),
-firebasecli = require('firebase-tools'),
 admin = require("firebase-admin"),
 TelegramBot = require('node-telegram-bot-api');
 const bot = new TelegramBot('261219001:AAEtz7spMMNwQQ_AcbCBtKXHAN01gCFVQSI', {
