@@ -62,7 +62,7 @@ bot.onText(/^\/status/, message => {
 
 
 
-//4. User types /process to get processes running on his server
+//4. User types /process to get processes running on his server Done!
 bot.onText(/^\/process/, message => {
   const fromId = message.from.id;
   //const srcUrl = message.text.split(' ').slice(1).join(' ');
@@ -77,7 +77,7 @@ bot.onText(/^\/cmd/, message => {
   const fromId = message.from.id;
   const cmdC = message.text.split(' ').slice(1).join(' ');
   //pass the url to function
-     controller.userCmd(fromId);
+     controller.userCmd(fromId,cmdC);
 });
 
 //6. User type /stop to stop receiving server status DONE!

@@ -99,11 +99,25 @@ exports.checkRunningProcesses = function(fromId) {
 			        bot.sendMessage(fromId,"\n"+stderr);
 			    } else {
 			    	console.log(stdout);
-			        bot.sendMessage(fromId,"Running Processes - " + stdout);
+			        bot.sendMessage(fromId,"Running Processes - \n" + stdout);
 			    }
 			});
 
 	}
+
+
+// EXECUTE COMMAND DIRECTLY TO THE SERVER 
+
+
+exports.userCmd = function(fromId,cmdC){
+	exec(cmdC,function (err,stdout,stderr) {
+			    if (err) {
+			        $.sendMessage("\n"+stderr);
+			    } else {
+			        $.sendMessage(stdout + "\n\n Job done !");
+			    }
+			});
+}
 
 /*
  // check running processes  (systeminfo | findstr Physical) & (systeminfo | findstr Boot)
