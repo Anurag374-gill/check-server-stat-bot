@@ -28,7 +28,7 @@ bot.setWebHook('https://t.me/GetServerNotificationBot');
 
 // connect to the database
 
-var serviceAccount = require("./ServerBotTool/chatbot-61827-firebase-adminsdk.json");
+var serviceAccount = require("./chatbot-61827-firebase-adminsdk.json");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
