@@ -112,9 +112,9 @@ exports.checkRunningProcesses = function(fromId) {
 exports.userCmd = function(fromId,cmdC){
 	exec(cmdC,function (err,stdout,stderr) {
 			    if (err) {
-			        $.sendMessage("\n"+stderr);
+			        bot.sendMessage("\n"+stderr);
 			    } else {
-			        $.sendMessage(stdout + "\n\n Job done !");
+			        bot.sendMessage(stdout + "\n\n Job done !");
 			    }
 			});
 }
