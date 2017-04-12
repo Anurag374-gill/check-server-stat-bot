@@ -117,7 +117,7 @@ bot.onText(/^\/cmd/, message => {
   //pass the url to function
   if(cmdC)
      controller.userCmd(fromId,cmdC);
-   else
+  if(!cmdC)
     bot.sendMessage("Please enter a valid command");
 });
 
