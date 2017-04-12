@@ -5,7 +5,7 @@ request = require('request'),
 requireAll = require('require-all'),
 validUrl = require('valid-url'),
 firebase  = require('firebase'),
-admin = require("firebase-admin"),
+//admin = require("firebase-admin"),
 TelegramBot = require('node-telegram-bot-api');
 const bot = new TelegramBot('261219001:AAEtz7spMMNwQQ_AcbCBtKXHAN01gCFVQSI', {
    polling:true 
@@ -30,8 +30,8 @@ bot.setWebHook('https://t.me/GetServerNotificationBot');
 
 var serviceAccount = require("./chatbot-61827-firebase-adminsdk.json");
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
+firebase.initializeApp({
+  serviceAccount: serviceAccount,
   databaseURL: "https://chatbot-61827.firebaseio.com/"
 });
 
@@ -165,7 +165,7 @@ var job = new cronJob( '* * * * *', function(){
 */
 
     // cron job that reports via telegram bot every minute
-  var job = new CronJob('*/1 * * * *', () => {
+  var job = new cronJob('*/1 * * * *', () => {
     let user = userRef.once('value');
     let status = statusRef.orderByKey().limitToLast(5).once('value');
     Promise.all([user, status]).then(values => {
