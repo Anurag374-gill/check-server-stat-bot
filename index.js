@@ -27,29 +27,15 @@ app.use(bodyParser.urlencoded({
 
 var serviceAccount = require("./chatbot-61827-firebase-adminsdk.json");
 
+
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: "https://chatbot-61827.firebaseio.com/"
 });
 
 
-
-
-
-// connect to the database
-
-
-var ref = admin.database().ref('/');
+var ref = admin.database().ref();
 var userRef = ref.child('/user');
-var urlRef =  ref.child('/url');
-var statusrRef =  ref.child('/status');
-var dbPush = function (fromId,srcUrl,err) {
-      if(err)
-        console.log('Push failed')
-     userRef.push(fromId);
-     urlRef.push(srcUrl);
-  }
-
 
 
 //----------------------------------------------------Commands for Telegram Bot------------------------------------------------------//
@@ -66,14 +52,13 @@ bot.onText(/^\/start/, message => {
 
 
 
-//2. User types /url www.abc.com to find its health stats continuously DONE!
+//2. User types /url www.abc.com to find its response stats continuously
 
 bot.onText(/^\/url/, message => {
   const fromId = message.from.id;
   const srcUrl = message.text.split(' ').slice(1).join(' ');
   if(validUrl.isUri(srcUrl)) { // Check url is valid or not
      controller.checkServerStatus(fromId,srcUrl);
-     dbPush(fromId,srcUrl);
      }
   else
    {
@@ -81,13 +66,9 @@ bot.onText(/^\/url/, message => {
    }
 });
 
-/*usersRef.once(‘value’, function (snap) {
- snap.forEach(function (childSnap) {
-  console.log(‘user’, childSnap.val());
- });
-});*/
 
-//3. User types /status www.abc.com to find its health stats only once DONE!
+
+//3. User types /status www.abc.com to find its response stats only once
 
 bot.onText(/^\/status/, message => {
   const fromId = message.from.id;
@@ -104,86 +85,80 @@ bot.onText(/^\/status/, message => {
 
 
 
-//4. User types /process to get processes running on his server DONE!
+//4. User types /process to get processes running on his server
 bot.onText(/^\/process/, message => {
   const fromId = message.from.id;
-  //const srcUrl = message.text.split(' ').slice(1).join(' ');
-  //pass the url to function
      controller.checkRunningProcesses(fromId);
 });
 
 
 
-//5. User types /cmd [command] to execute in the server directly DONE!
+//5. User types /cmd [command] to execute in the server directly
 bot.onText(/^\/cmd/, message => {
   const fromId = message.from.id;
   const cmdC = message.text.split(' ').slice(1).join(' ');
-  //pass the url to function
   if(cmdC)
      controller.userCmd(fromId,cmdC);
   if(cmdC == '' || cmdC == " ")
     bot.sendMessage("Please enter a valid command");
 });
 
-//6. User type /stop to stop receiving server status DONE!
+
+
+//6. User type /stop to stop receiving server status
 bot.onText(/^\/stop/, message => {
   const fromId = message.from.id;
   controller.stopServer(fromId);
 });
 
-
-// Cron job to send notification to user 
-/*
-var job = new cronJob( '* * * * *', function(){
-    userRef.once('value', function (url) {
-       url.forEach(function (err,url) {
-        var stat = controller.checkServerStatusOnce(fromId,url);
-        statusRef.push(stat);
-        if(err){
-
-
-        }
-    });
+//7. User types /serverStatus to get server status
+bot.onText(/^\/serverStatus/, message => {
+  const fromId = message.from.id;
+     // push userid and url into the firebase
+    var chatId = userRef.push({
+      id:fromId
+        });
+     controller.checkServerStat(fromId);
 });
 
-    // cron job that checks a given url every 30 seconds
-    var checkServerJob = new CronJob('*30 * * * * *', () => {  
-    urlRef.once('value')
-      .then(url => {
-        return  util.checkServer(url.val());
-      })
-      .then((output) => {
-        statusRef.push(output);
-      })
-      .catch((output) => {
-        statusRef.push(output);
-        util.sendSMS(config.twilioNum, config.clientNum, `${output.status.msg}!`);
-        userRef.once('value')
-          .then(user => {
-            bot.sendMessage(user.val(), `Server Unresponsive, tracking is stopped\n\n----------------------------\nStatus:\n\n${JSON.stringify(output.status, null, 2)}`);
-            jobEmitter.emit('stop', checkServerJob);
-            jobEmitter.emit('stop', reportServerJob);
-          });
-      });
-  }, () => { console.log('Server Unresponsive, stopping the cron job and sending sms...'); }, false);
-*/
 
-    // cron job that reports via telegram bot every minute
-  var job = new cronJob('*/1 * * * *', () => {
-    let user = userRef.once('value');
-    let status = statusRef.orderByKey().limitToLast(5).once('value');
-    Promise.all([user, status]).then(values => {
-      if (values[0].val() != null && values[1].val() != null) {
-        bot.sendMessage(values[0].val(), JSON.stringify(values[1].val(), null, 2));
-      }
-    }).catch(err => {
-      console.log(err);
-    });
-  }, () => { console.log('Stop monitoring server...'); }, false);
+// Notify user with server stats every 6 hours
+
+
+var jobTest = new cronJob('* */6 * * *', function (){
+      console.log("Server is ok ");        
+      ref.orderByKey().once('value',function(snap){
+        snap.forEach(function(childSnap){
+          console.log(childSnap.val());
+            //controller.checkServerStat(childSnap.val());
+            //test case
+            controller.checkServerStat(328332827);
+             });
+        });       
+  },null,true);
+
+
+// Notify user if server down for more that 5 seconds
+
+var jobTest = new cronJob('*/10 * * * *', function (){
+      console.log("Server is ok ");        
+      ref.orderByKey().once('value',function(snap){
+        snap.forEach(function(childSnap){
+          console.log(childSnap.val());
+            //controller.checkServerStat(childSnap.val());
+            //test case
+            if(controller.checkServerStat(328332827))
+              console.log("Server running");
+            else
+              bot.sendMessage(328332827,"Server is not responding");
+          });
+        });      
+  },null,true);
+
+
+
+
 
 
 app.get(`/`, (req, res) => res.redirect('https://t.me/GetServerNotificationBot'));
 app.listen(process.env.PORT || 3434); 
-
-
-

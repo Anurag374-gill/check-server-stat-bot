@@ -35,12 +35,6 @@ const bot = new TelegramBot('261219001:AAEtz7spMMNwQQ_AcbCBtKXHAN01gCFVQSI', {
           let response_msg = response.statusMessage;
           date = Date(Date.now()).toString();
           connection = true;
-
-          //let cpu_usage = process.cpuUsage(usageInStart);
-          //let totalUserTime = ~~(cpu_usage.user)/1000;
-          //let totalSystemTime = ~~(cpu_usage.system)/1000;
-          //let idleTime = ~~(cpu_usage.idle)/1000;
-          //let load = process.loadavg()[0];
           bot.sendMessage(fromId,
             "Response time: " + ~~((response_time[0]/1000000)-1) + " s, " + ~~(response_time[1]/1000000) +"ms" + "\nStatus: " + response_code +
              "\nResponse: " + response_msg + "\nDate: " + date + 
@@ -51,7 +45,7 @@ const bot = new TelegramBot('261219001:AAEtz7spMMNwQQ_AcbCBtKXHAN01gCFVQSI', {
     }
 
 
-// To stop the server
+// TO STOP THE SERVER
 
 exports.stopServer = function(fromId){
       clearInterval(intervalId);
@@ -119,21 +113,35 @@ exports.userCmd = function(fromId,cmdC){
 			});
 }
 
-/*
- 
-
-
-
-
-
-
-
-
-
-/*function exitHandler(exitCode) {
-    storage.flush();
-    process.exit(exitCode);
-}
-
-process.on('SIGINT', exitHandler.bind(null, 0));
-process.on('uncaughtException', exitHandler.bind(null, 1));*/
+// CHECK SERVER AND SEND NOTIFICATIONS TO USER
+exports.checkServerStat = function (fromId){
+      	let date = Date(Date.now()).toString();
+        var cpus = os.cpus();	
+         bot.sendMessage(fromId,"The health status of this server is :\n");
+		for(var i = 0, len = cpus.length; i < len; i++) {
+			var cpu = cpus[i], total = 0, processTotal = 0, strPercent = '';
+			console.log("User time in ms: " + cpu.times.user + "\nSystem time in ms:" + cpu.times.sys + "\n Idle time in ms: " + cpu.times.idle );
+			for (type in cpu.times){
+				var total = total + cpu.times[type];
+			}
+			for (type in cpu.times){
+				var percent = ~~(100 * cpu.times[type]/total);
+				strPercent += type + ' ' + percent + '%';
+				if(type != 'idle'){
+					processTotal += percent;	
+			}
+		}
+		console.log("\t",strPercent)
+		console.log("\t",'Total Processor: ',total);
+		console.log("\t",'TOTAL: ',processTotal + "%");
+		console.log("\t","free memory in MB:", os.freemem()/(1024*1024));
+		console.log("\t","total memory in MB:", os.totalmem()/(1024*1024));
+		console.log("\t","uptime", os.uptime() + "seconds.");
+		console.log("\t","loadavg", os.loadavg());
+        bot.sendMessage(fromId,"Cpu :" + i + 
+         	"\nServer Performance : " + strPercent + 
+             "\nProcesses comsuming: " + processTotal + "%" +
+        	"\nFree memory available in MB:" + os.freemem()/(1024*1024) + "\nTotal Memory Available : " + os.totalmem()/(1024*1024) +
+        	"\nUptime (in seconds): " + os.uptime() + "\nLoad Average : " + os.loadavg());
+          }
+      }
