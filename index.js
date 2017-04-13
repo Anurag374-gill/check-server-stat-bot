@@ -136,8 +136,18 @@ var jobTest = new cronJob('* */6 * * *', function (){
   },null,true);
 
 
-// Notify user if server down for more that 5 seconds
+// Notify user if server down for more that 5 seconds id --> 358238116
 
+var job = new cronJob('*/10 * * * *', function (){
+      console.log("Testing server");
+      if(!controller.checkServerStat(32833282)){     
+      userRef.orderByKey().once('value')
+      .then( id => {
+        console.log(id.val());
+        bot.sendMessage(id.val(),"Sever is not responding");
+        }
+      }
+  },null,true);*/
 
 
 

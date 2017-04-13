@@ -113,6 +113,8 @@ exports.userCmd = function(fromId,cmdC){
 			});
 }
 
+
+
 // CHECK SERVER AND SEND NOTIFICATIONS TO USER
 exports.checkServerStat = function (fromId){
       	let date = Date(Date.now()).toString();
@@ -138,7 +140,7 @@ exports.checkServerStat = function (fromId){
 		console.log("\t","total memory in MB:", os.totalmem()/(1024*1024));
 		console.log("\t","uptime", os.uptime()/(60*60) + "hours.");
 		console.log("\t","loadavg", os.loadavg());
-        bot.sendMessage(fromId,"Cpu :" + i+1 + 
+        bot.sendMessage(fromId,"Cpu :" + (++i) + 
          	"\nServer Performance : " + strPercent + 
              "\nProcesses comsuming: " + processTotal + "%" +
         	"\nFree memory available in MB:" + os.freemem()/(1024*1024) + "\nTotal Memory Available : " + os.totalmem()/(1024*1024) +
