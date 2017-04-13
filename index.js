@@ -112,7 +112,7 @@ bot.onText(/^\/stop/, message => {
 });
 
 //7. User types /serverStatus to get server status
-bot.onText(/^\/serverStatus/, message => {
+bot.onText(/^\/serverstatus/, message => {
   const fromId = message.from.id;
      // push userid and url into the firebase
     var chatId = userRef.push({

@@ -136,12 +136,12 @@ exports.checkServerStat = function (fromId){
 		console.log("\t",'TOTAL: ',processTotal + "%");
 		console.log("\t","free memory in MB:", os.freemem()/(1024*1024));
 		console.log("\t","total memory in MB:", os.totalmem()/(1024*1024));
-		console.log("\t","uptime", os.uptime() + "seconds.");
+		console.log("\t","uptime", os.uptime()/(60*60) + "hours.");
 		console.log("\t","loadavg", os.loadavg());
-        bot.sendMessage(fromId,"Cpu :" + i + 
+        bot.sendMessage(fromId,"Cpu :" + i+1 + 
          	"\nServer Performance : " + strPercent + 
              "\nProcesses comsuming: " + processTotal + "%" +
         	"\nFree memory available in MB:" + os.freemem()/(1024*1024) + "\nTotal Memory Available : " + os.totalmem()/(1024*1024) +
-        	"\nUptime (in seconds): " + os.uptime() + "\nLoad Average : " + os.loadavg());
+        	"\nUptime (in hrs): " + os.uptime()/(60*60) + "\nLoad Average : " + os.loadavg());
           }
       }
