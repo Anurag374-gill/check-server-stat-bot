@@ -127,34 +127,16 @@ bot.onText(/^\/serverStatus/, message => {
 
 var jobTest = new cronJob('* */6 * * *', function (){
       console.log("Server is ok ");        
-      ref.orderByKey().once('value',function(snap){
-        snap.forEach(function(childSnap){
-          console.log(childSnap.val());
-            //controller.checkServerStat(childSnap.val());
-            //test case
-            controller.checkServerStat(328332827);
-             });
-        });       
+      userRef.orderByKey().once('value')
+      .then( id => {
+        console.log(id.val());
+        controller.checkServerStat(id.val());
+
+      });
   },null,true);
 
 
 // Notify user if server down for more that 5 seconds
-
-var jobTest = new cronJob('*/10 * * * *', function (){
-      console.log("Server is ok ");        
-      ref.orderByKey().once('value',function(snap){
-        snap.forEach(function(childSnap){
-          console.log(childSnap.val());
-            //controller.checkServerStat(childSnap.val());
-            //test case
-            if(controller.checkServerStat(328332827))
-              console.log("Server running");
-            else
-              bot.sendMessage(328332827,"Server is not responding");
-          });
-        });      
-  },null,true);
-
 
 
 
