@@ -142,9 +142,9 @@ var job = new cronJob('*/10 * * * *', function (){
       .then( id => {
         console.log(id.val());
         bot.sendMessage(id.val(),"Sever is not responding");
-        }
+        });
       }
-  },null,true);*/
+  },null,true);
 
 
 
