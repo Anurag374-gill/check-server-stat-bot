@@ -2,7 +2,6 @@ const express = require('express'),
 bodyParser = require('body-parser'),
 controller = require('./serverController.js'),
 request = require('request'),
-requireAll = require('require-all'),
 validUrl = require('valid-url'),
 firebase  = require('firebase'),
 admin = require("firebase-admin"),
@@ -10,8 +9,6 @@ TelegramBot = require('node-telegram-bot-api');
 const bot = new TelegramBot('261219001:AAEtz7spMMNwQQ_AcbCBtKXHAN01gCFVQSI', {
    polling:true 
 });
-const twilio = require('twilio'),
-client = twilio('ACf0d4bb9691bd0aaec2712128dd4e8635', 'AC236f8fe2eff6d382d67267fcb043586c:76f974593dd373a33ae7e8a1359caa6e'),
 cronJob = require('cron').CronJob;
 
 
